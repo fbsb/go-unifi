@@ -196,26 +196,15 @@ func main() {
 	versionBaseDirFlag := flag.String("version-base-dir", ".", "The base directory for version JSON files")
 	outputDirFlag := flag.String("output-dir", ".", "The output directory of the generated Go code")
 	downloadOnly := flag.Bool("download-only", false, "Only download and build the fields JSON directory, do not generate")
-	useLatestVersion := flag.Bool("latest", false, "Use the latest available version")
 
 	flag.Parse()
-
-	specifiedVersion := flag.Arg(0)
-	if specifiedVersion != "" && *useLatestVersion {
-		fmt.Print("error: cannot specify version with latest\n\n")
-		usage()
-		os.Exit(1)
-	} else if specifiedVersion == "" && !*useLatestVersion {
-		fmt.Print("error: must specify version or latest\n\n")
-		usage()
-		os.Exit(1)
-	}
 
 	var unifiVersion *version.Version
 	var unifiDownloadUrl *url.URL
 	var err error
 
-	if *useLatestVersion {
+	specifiedVersion := flag.Arg(0)
+	if specifiedVersion == "" {
 		unifiVersion, unifiDownloadUrl, err = latestUnifiVersion()
 		if err != nil {
 			panic(err)
